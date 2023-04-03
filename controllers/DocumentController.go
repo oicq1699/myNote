@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"image/png"
+
 	"net/http"
 	"net/url"
 	"os"
@@ -987,7 +988,7 @@ func (c *DocumentController) Search() {
 
 	identify := c.Ctx.Input.Param(":key")
 	token := c.GetString("token")
-	keyword := strings.TrimSpace(c.GetString("keyword"))
+	keywords := strings.Split(strings.TrimSpace(c.GetString("keyword")), " ")
 
 	if identify == "" {
 		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
@@ -1000,24 +1001,55 @@ func (c *DocumentController) Search() {
 
 	bookResult := c.isReadable(identify, token)
 
-	docs, err := models.NewDocumentSearchResult().SearchDocument(keyword, bookResult.BookId)
-	if err != nil {
-		logs.Error(err)
-		c.JsonResult(6002, i18n.Tr(c.Lang, "message.search_result_error"))
+	// 声明一个 map，用于存储去重后的元素
+
+	var alldocs []*models.DocumentSearchResult
+	for _, keyword := range keywords {
+		if len(strings.TrimSpace(keyword)) > 0 {
+			docs, err := models.NewDocumentSearchResult().SearchDocument(keyword, bookResult.BookId)
+			if err != nil {
+				logs.Error(err)
+				c.JsonResult(6002, i18n.Tr(c.Lang, "message.search_result_error"))
+			}
+			if alldocs == nil {
+				alldocs = docs
+			} else {
+
+				alldocs = Intersection(alldocs, docs)
+
+			}
+		}
 	}
 
-	if len(docs) < 0 {
+	if len(alldocs) < 0 {
 		c.JsonResult(404, i18n.Tr(c.Lang, "message.no_data"))
 	}
 
-	for _, doc := range docs {
+	for _, doc := range alldocs {
 		doc.BookId = bookResult.BookId
 		doc.BookName = bookResult.BookName
 		doc.Description = bookResult.Description
 		doc.BookIdentify = bookResult.Identify
 	}
 
-	c.JsonResult(0, "ok", docs)
+	c.JsonResult(0, "ok", alldocs)
+}
+
+func Intersection(documents1 []*models.DocumentSearchResult, documents2 []*models.DocumentSearchResult) []*models.DocumentSearchResult {
+	result := make([]*models.DocumentSearchResult, 0)
+
+	set := make(map[int]bool)
+	for _, document := range documents1 {
+		set[document.DocumentId] = true
+	}
+
+	for _, document := range documents2 {
+		if set[document.DocumentId] {
+			result = append(result, document)
+		}
+	}
+
+	return result
 }
 
 // 文档历史列表
@@ -1148,7 +1180,7 @@ func (c *DocumentController) DeleteHistory() {
 	c.JsonResult(0, "ok")
 }
 
-//通过文档历史恢复文档
+// 通过文档历史恢复文档
 func (c *DocumentController) RestoreHistory() {
 	c.Prepare()
 
