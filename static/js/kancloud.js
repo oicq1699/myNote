@@ -183,7 +183,7 @@ function loadDocument($url, $id, $callback) {
 
                 $body = $res.data.body;
                 if (typeof $callback === "function" ) {
-                    $body = $callback(body);
+                    $body = $callback($body);
                 }
 
                 events.data($id, $res.data);

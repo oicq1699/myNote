@@ -284,19 +284,43 @@ func (m *DocumentSearchResult) SearchDocument(keyword string, bookId int) (docs 
 
 // 项目内搜索,基于document_name.
 func (m *DocumentSearchResult) SearchDocumentByDocName(keywords []string, bookId int) (docs []*DocumentSearchResult, err error) {
-	cond := orm.NewCondition()
-	cond.And("book_id", bookId)
+
+	var sql strings.Builder
+	sql.Grow(200)
+	sql.WriteString("SELECT * FROM md_documents WHERE book_id = ? ")
+
+	realKeywords := make([]string, 0, len(keywords))
+
 	for _, keyword := range keywords {
-
-		cond.And("document_name__icontains", keyword)
-
+		if len(strings.TrimSpace(keyword)) > 0 {
+			sql.WriteString("AND document_name LIKE? ")
+			realKeywords = append(realKeywords, "%"+strings.TrimSpace(keyword)+"%")
+		}
 	}
 
 	o := orm.NewOrm()
+	_, err = o.Raw(sql.String(), bookId, realKeywords).QueryRows(&docs)
 
-	qs := o.QueryTable("md_documents")
-	qs = qs.SetCond(cond)
-	_, err = qs.All(&docs)
+	return
+}
+
+func (m *DocumentSearchResult) SearchDocumentByRelease(keywords []string, bookId int) (docs []*DocumentSearchResult, err error) {
+
+	var sql strings.Builder
+	sql.Grow(200)
+	sql.WriteString("SELECT * FROM md_documents WHERE book_id = ? ")
+
+	realKeywords := make([]string, 0, len(keywords))
+
+	for _, keyword := range keywords {
+		if len(strings.TrimSpace(keyword)) > 0 {
+			sql.WriteString("AND  `release`  LIKE? ")
+			realKeywords = append(realKeywords, "%"+strings.TrimSpace(keyword)+"%")
+		}
+	}
+
+	o := orm.NewOrm()
+	_, err = o.Raw(sql.String(), bookId, realKeywords).QueryRows(&docs)
 
 	return
 }

@@ -988,7 +988,14 @@ func (c *DocumentController) Search() {
 
 	identify := c.Ctx.Input.Param(":key")
 	token := c.GetString("token")
-	keywords := strings.Split(strings.TrimSpace(c.GetString("keyword")), " ")
+	oriKeyword := strings.TrimSpace(c.GetString("keyword"))
+	isFullSearch := strings.HasPrefix(oriKeyword, ":")
+
+	if isFullSearch {
+		oriKeyword = strings.TrimSpace(oriKeyword[1:])
+	}
+
+	keywords := strings.Split(oriKeyword, " ")
 
 	if identify == "" {
 		c.JsonResult(6001, i18n.Tr(c.Lang, "message.param_error"))
@@ -1002,27 +1009,42 @@ func (c *DocumentController) Search() {
 	bookResult := c.isReadable(identify, token)
 
 	// 声明一个 map，用于存储去重后的元素
+	/*
+		var alldocs []*models.DocumentSearchResult
+		for _, keyword := range keywords {
+			if len(strings.TrimSpace(keyword)) > 0 {
+				docs, err := models.NewDocumentSearchResult().SearchDocument(keyword, bookResult.BookId)
+				if err != nil {
+					logs.Error(err)
+					c.JsonResult(6002, i18n.Tr(c.Lang, "message.search_result_error"))
+				}
+				if alldocs == nil {
+					alldocs = docs
+				} else {
 
-	var alldocs []*models.DocumentSearchResult
-	for _, keyword := range keywords {
-		if len(strings.TrimSpace(keyword)) > 0 {
-			docs, err := models.NewDocumentSearchResult().SearchDocument(keyword, bookResult.BookId)
-			if err != nil {
-				logs.Error(err)
-				c.JsonResult(6002, i18n.Tr(c.Lang, "message.search_result_error"))
-			}
-			if alldocs == nil {
-				alldocs = docs
-			} else {
+					alldocs = Intersection(alldocs, docs)
 
-				alldocs = Intersection(alldocs, docs)
-
+				}
 			}
 		}
+
+		if len(alldocs) < 0 {
+			c.JsonResult(404, i18n.Tr(c.Lang, "message.no_data"))
+		}
+	*/
+	//alldocs, err := models.NewDocumentSearchResult().SearchDocument(keywords[0], bookResult.BookId)
+	alldocs, err := models.NewDocumentSearchResult().SearchDocumentByDocName(keywords, bookResult.BookId)
+
+	if err != nil {
+		logs.Error("查询数据失败 ->", err)
+		c.ShowErrorPage(500, "查询数据失败 ")
 	}
 
-	if len(alldocs) < 0 {
-		c.JsonResult(404, i18n.Tr(c.Lang, "message.no_data"))
+	if isFullSearch {
+		fullTextAlldocs, err := models.NewDocumentSearchResult().SearchDocumentByRelease(keywords, bookResult.BookId)
+		if err == nil {
+			alldocs = append(alldocs, fullTextAlldocs...)
+		}
 	}
 
 	for _, doc := range alldocs {

@@ -160,7 +160,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">{{i18n .Lang "doc.doc_name"}} <span class="error-message">*</span></label>
                     <div class="col-sm-10">
-                        <input type="text" name="doc_name" id="documentName" placeholder="{{i18n .Lang "doc.doc_name"}}" class="form-control"  maxlength="50">
+                        <input type="text" name="doc_name" id="documentName" placeholder="{{i18n .Lang "doc.doc_name"}}" class="form-control"  maxlength="150">
                         <p style="color: #999;font-size: 12px;">{{i18n .Lang "doc.doc_name_tips"}}</p>
 
                     </div>
