@@ -58,66 +58,87 @@ $(function () {
     if (!window.IS_ENABLE_IFRAME) {
         htmlDecodeList.unshift("iframe");
     }
-    window.editor = editormd("docEditor", {
-        width: "100%",
-        height: "100%",
-        path: window.editormdLib,
-        toolbar: true,
-        placeholder: window.editormdLocales[window.lang].placeholder,
-        imageUpload: true,
-        imageFormats: ["jpg", "jpeg", "gif", "png","svg", "JPG", "JPEG", "GIF", "PNG","SVG"],
-        imageUploadURL: window.imageUploadURL,
-        toolbarModes: "full",
-        fileUpload: true,
-        fileUploadURL: window.fileUploadURL,
-        taskList: true,
-        flowChart: true,
-        htmlDecode: htmlDecodeList.join(','),
-        lineNumbers: true,
-        sequenceDiagram: true,
-        tocStartLevel: 1,
-        tocm: true,
-        previewCodeHighlight: 1,
-        highlightStyle: window.highlightStyle ? window.highlightStyle : "github",
-        tex:true,
-        saveHTMLToTextarea: true,
+    const { Editor } = toastui;
+    const { codeSyntaxHighlight } = Editor.plugin;
 
-        onload: function() {
-            this.hideToolbar();
-            var keyMap = {
-                "Ctrl-S": function(cm) {
-                    saveDocument(false);
-                },
-                "Cmd-S": function(cm){
-                    saveDocument(false);
-                },
-                "Ctrl-A": function(cm) {
-                    cm.execCommand("selectAll");
-                }
-            };
-            this.addKeyMap(keyMap);
 
-            //如果没有选中节点则选中默认节点
-            openLastSelectedNode();
-            uploadImage("docEditor", function ($state, $res) {
-                if ($state === "before") {
-                    return layer.load(1, {
-                        shade: [0.1, '#fff'] // 0.1 透明度的白色背景
-                    });
-                } else if ($state === "success") {
-                    if ($res.errcode === 0) {
-                        var value = '![](' + $res.url + ')';
-                        window.editor.insertValue(value);
-                    }
-                }
-            });
-            
-            window.isLoad = true;
+    window.editor=new toastui.Editor({
+        el: document.querySelector('#docEditor'),
+        previewStyle: 'vertical',
+        height: '100%',
+        initialValue: '',
+        events : {
+            focus:function(){
+               // openLastSelectedNode();
+            },
+            change:function(){
+                resetEditorChanged(true);
+            }
         },
-        onchange: function () {
-            resetEditorChanged(true);
-        }
-    });
+        plugins: [codeSyntaxHighlight]
+
+      });
+
+    // window.editor = editormd("docEditor", {
+    //     width: "100%",
+    //     height: "100%",
+    //     path: window.editormdLib,
+    //     toolbar: true,
+    //     placeholder: window.editormdLocales[window.lang].placeholder,
+    //     imageUpload: true,
+    //     imageFormats: ["jpg", "jpeg", "gif", "png","svg", "JPG", "JPEG", "GIF", "PNG","SVG"],
+    //     imageUploadURL: window.imageUploadURL,
+    //     toolbarModes: "full",
+    //     fileUpload: true,
+    //     fileUploadURL: window.fileUploadURL,
+    //     taskList: true,
+    //     flowChart: true,
+    //     htmlDecode: htmlDecodeList.join(','),
+    //     lineNumbers: true,
+    //     sequenceDiagram: true,
+    //     tocStartLevel: 1,
+    //     tocm: true,
+    //     previewCodeHighlight: 1,
+    //     highlightStyle: window.highlightStyle ? window.highlightStyle : "github",
+    //     tex:true,
+    //     saveHTMLToTextarea: true,
+
+    //     onload: function() {
+    //         this.hideToolbar();
+    //         var keyMap = {
+    //             "Ctrl-S": function(cm) {
+    //                 saveDocument(false);
+    //             },
+    //             "Cmd-S": function(cm){
+    //                 saveDocument(false);
+    //             },
+    //             "Ctrl-A": function(cm) {
+    //                 cm.execCommand("selectAll");
+    //             }
+    //         };
+    //         this.addKeyMap(keyMap);
+
+    //         //如果没有选中节点则选中默认节点
+    //         openLastSelectedNode();
+    //         uploadImage("docEditor", function ($state, $res) {
+    //             if ($state === "before") {
+    //                 return layer.load(1, {
+    //                     shade: [0.1, '#fff'] // 0.1 透明度的白色背景
+    //                 });
+    //             } else if ($state === "success") {
+    //                 if ($res.errcode === 0) {
+    //                     var value = '![](' + $res.url + ')';
+    //                     window.editor.insertValue(value);
+    //                 }
+    //             }
+    //         });
+            
+    //         window.isLoad = true;
+    //     },
+    //     onchange: function () {
+    //         resetEditorChanged(true);
+    //     }
+    // });
 
     function insertToMarkdown(body) {
         window.isLoad = true;
@@ -218,9 +239,10 @@ $(function () {
             if (res.errcode === 0) {
                 window.isLoad = true;
                 try {
-                    window.editor.clear();
-                    window.editor.insertValue(res.data.markdown);
-                    window.editor.setCursor({line: 0, ch: 0});
+                    window.editor.setMarkdown(res.data.markdown);
+                    //window.editor.clear();
+                    //window.editor.insertValue(res.data.markdown);
+                    //window.editor.setCursor({line: 0, ch: 0});
                 }catch(e){
                     console.log(e);
                 }
@@ -245,8 +267,10 @@ $(function () {
     function saveDocument($is_cover, callback) {
         var index = null;
         var node = window.selectNode;
+        //var content = window.editor.getMarkdown();
+        //var html = window.editor.getPreviewedHTML();
         var content = window.editor.getMarkdown();
-        var html = window.editor.getPreviewedHTML();
+         var html = window.editor.getHTML();
         var version = "";
 
         if (!node) {
@@ -441,7 +465,7 @@ $(function () {
         window.treeCatalog = $("#sidebar").jstree(true);
 
         //如果没有选中节点则选中默认节点
-        // openLastSelectedNode();
+         openLastSelectedNode();
     }).on('select_node.jstree', function (node, selected) {
 
         if ($("#markdown-save").hasClass('change')) {
