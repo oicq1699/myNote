@@ -27,6 +27,9 @@
     <link href="{{cdncss (print "/static/editor.md/lib/highlight/styles/" .HighlightStyle ".css") "version"}}" rel="stylesheet">
     <link href="{{cdncss "/static/katex/katex.min.css"}}" rel="stylesheet">
     <link href="{{cdncss "/static/css/print.css" "version"}}" media="print" rel="stylesheet">
+    <link href="{{cdncss "/static/toastui-editor/toastui-editor.css" "version"}}" rel="stylesheet">
+    <link href="{{cdncss "/static/toastui-editor/prism.min.css" }}" rel="stylesheet">
+    <link href="{{cdncss "/static/toastui-editor/toastui-editor-plugin-code-syntax-highlight.min.css" }}" rel="stylesheet">
 
     <script type="text/javascript">
         window.IS_ENABLE_IFRAME = '{{conf "enable_iframe" }}' === 'true';
@@ -177,9 +180,13 @@
                     </div>
                 </div>
                 <div class="article-content">
-                    <div class="article-body  {{if eq .Model.Editor "markdown"}}markdown-body editormd-preview-container{{else}}editor-content{{end}}"  id="page-content">
+                    <div style="display: none;" class="article-body  {{if eq .Model.Editor "markdown"}}markdown-body editormd-preview-container{{else}}editor-content{{end}}"  id="page-content">
                         {{.Content}}
                     </div>
+                    <div style="height: 100%;"   id="page-content2">
+                       
+                    </div>
+
 
                     {{if .Model.IsDisplayComment}}
                     <div id="articleComment" class="m-comment{{if .IS_DOCUMENT_INDEX}} not-show-comment{{end}}">
@@ -302,6 +309,9 @@
 <script src="{{cdnjs "/static/js/splitbar.js" "version"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/js/custom-elements-builtin-0.6.5.min.js"}}" type="text/javascript"></script>
 <script src="{{cdnjs "/static/js/x-frame-bypass-1.0.2.js"}}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/toastui-editor/toastui-editor-all.js" "version" }}" type="text/javascript"></script>
+<script src="{{cdnjs "/static/toastui-editor/toastui-editor-plugin-code-syntax-highlight-all.min.js"  }}" type="text/javascript"></script>
+
 <script type="text/javascript">
 $(function () {
     $("#searchList").on("click","a",function () {
@@ -315,7 +325,7 @@ $(function () {
     });
 
     window.menuControl = true;
-    // window.menuSetting = "open" ;
+     window.menuSetting = "open" ;
     if (menuSetting == 'open' || menuSetting == 'first') {
         $('#handlerMenuShow').find('span').text('{{i18n .Lang "doc.fold"}}');
         $('#handlerMenuShow').find('i').attr("class","fa fa-angle-down");
@@ -354,6 +364,31 @@ $(function () {
     if (!window.IS_DOCUMENT_INDEX && IS_DISPLAY_COMMENT) {
         pageClicked(-1, parseInt($('#doc_id').val()));
     }
+
+    window.onload = (event) => {
+        console.log('page is fully loaded');
+        const { Editor } = toastui;
+        const { codeSyntaxHighlight } = Editor.plugin;
+
+        window.viewer= Editor.factory({
+        el: document.querySelector('#page-content2'),
+        viewer: true,
+        height: '100%',
+        initialValue: ''
+        ,
+        plugins: [[codeSyntaxHighlight, { highlighter: Prism }]]
+      });
+
+      loadDocument(window.location.href, '{{.DocumentId}}','{{.Version}}');
+
+ 
+
+
+    };
+
+
+
+
 });
 </script>
 {{.Scripts}}

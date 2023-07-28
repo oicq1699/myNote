@@ -195,6 +195,7 @@ func (c *DocumentController) Read() {
 			Title       string `json:"title"`
 			Version     int64  `json:"version"`
 			ViewCount   int    `json:"view_count"`
+			Markdown    string `json:"markdown"`
 		}
 		data.DocId = doc.DocumentId
 		data.DocIdentify = doc.Identify
@@ -203,6 +204,7 @@ func (c *DocumentController) Read() {
 		data.Title = doc.DocumentName + " - Powered by MinDoc"
 		data.Version = doc.Version
 		data.ViewCount = doc.ViewCount
+		data.Markdown = doc.Markdown
 
 		c.JsonResult(0, "ok", data)
 	} else {
@@ -214,6 +216,7 @@ func (c *DocumentController) Read() {
 			page := pagination.PageUtil(int(count), 1, conf.PageSize, comments)
 			c.Data["Page"] = page
 		}
+		c.Data["Version"] = doc.Version
 	}
 
 	tree, err := models.NewDocument().CreateDocumentTreeForHtml(bookResult.BookId, doc.DocumentId)
@@ -231,6 +234,7 @@ func (c *DocumentController) Read() {
 	c.Data["Title"] = doc.DocumentName
 	c.Data["Content"] = template.HTML(doc.Release)
 	c.Data["ViewCount"] = doc.ViewCount
+	c.Data["Markdown"] = "`\n" + doc.Markdown + "\n`"
 }
 
 // 编辑文档
