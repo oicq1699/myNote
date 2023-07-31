@@ -1,4 +1,26 @@
-# MinDoc 简介
+# MyNote 简介
+MyNote fork 于 MinDoc，MinDoc 是一款针对IT团队开发的简单好用的文档管理系统。
+
+分叉的原因是每个人的口味并不相同，这个笔记主要是自己用的，所以基于MinDoc，做些改造，更合自己的口味，让自己用的更舒服一点。
+帮助使用手册完全可以参考MinDoc，
+
+>如果下文所列的一些调整项，对你而言并不需要，建议你还是使用原版MinDoc.原版的维护更有保障
+## MinDoc适合我的地方
+- 网页应用，不需要专门的app，因为是基于服务端的，所以也不存在同步的问题，而我在手机端，基本上不会做编辑，最多就是浏览一下
+- markdown 格式，非专有格式保证数据可移植性
+## 我已调整的项
+- 编辑器：原有的编辑器编辑视图和预览视图不能很好的同步滚动，特别是贴比较多图的时候，两边能差一页以上，所以我最后把编辑器改成toastui-editor了
+- 浏览界面：原有的浏览界面，在显示代码时，区块高度不够，需要用区块内滚动条来查看整个代码块，这块我也用不习惯，所以后面也改成toastui-editor-viewer了
+- toc,toastui-editor-viewer自身并没有toc概念，当文章比较长的时候，想按目录查看就会比较麻烦，所以改造了一下toastui-editor 和 mindoc，让mindoc右侧的toc栏适应toastui-editor,这块也用到了markdown-toc/markdown-toc.js 的部分代码
+## 后期开发计划
+- toc栏双向交互
+- 标题栏下方显示文章所在目录
+
+
+---
+>下面是mindoc的介绍，摘之其官网,向原作者致敬，终于让我找到了一个合适的文档管理软件
+## MinDoc 简介
+
 
 [![Build Status](https://travis-ci.com/mindoc-org/mindoc.svg?branch=master)](https://travis-ci.com/mindoc-org/mindoc)
 [![Build status](https://ci.appveyor.com/api/projects/status/7680ia6mu29m12wx?svg=true)](https://ci.appveyor.com/project/mindoc-org/mindoc)
@@ -17,23 +39,7 @@ MinDoc 的前身是 [SmartWiki](https://github.com/lifei6671/SmartWiki) 文档�
 
 ---
 
-### 开发&维护&使用 悉知
-
-感谢作者 [lifei6671](https://github.com/lifei6671) 创造了MinDoc，并持续维护了很久。
-
-作者因工作等原因，精力有限，无法花费足够的时间来持续维护mindoc，已于北京时间2021年3月23日将mindoc交给社区(github组织[mindoc-org](https://github.com/mindoc-org))维护，期待热心开发者加入[mindoc-org](https://github.com/mindoc-org)一起来维护MinDoc。
-
-遇到问题请提 [Issues](https://github.com/mindoc-org/mindoc/issues )，欢迎使用者和贡献者加入QQ群 `1051164153`
-<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=bHFR7P3Qp1nsSPbsTw4KN_ZpFLUAblIU&jump_from=webapi"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="MinDoc使用&amp;开发交流群" title="MinDoc使用&amp;开发交流群"></a>
-
-对开发感兴趣请关注 [Development](https://github.com/mindoc-org/mindoc/projects/1):
-- [Todo List](https://github.com/mindoc-org/mindoc/projects/1#column-13554511)
-- [Work in progress](https://github.com/mindoc-org/mindoc/projects/1#column-13554512)
-- [Review in progress](https://github.com/mindoc-org/mindoc/projects/1#column-13554513)
-
----
-
-# 安装与使用
+### 安装与使用
 
 **如果你的服务器上没有安装golang程序请手动设置一个环境变量如下：键名为 ZONEINFO，值为MinDoc跟目录下的/lib/time/zoneinfo.zip 。**
 
@@ -44,7 +50,7 @@ MinDoc 的前身是 [SmartWiki](https://github.com/lifei6671/SmartWiki) 文档�
 如果有Golang开发经验，建议通过编译安装，要求golang版本不小于1.15.1(需支持`CGO`、`go mod`和`import _ "time/tzdata"`)(推荐Go版本为1.18.1)。
 > 注意: CentOS7上GLibC版本低，常规编译版本不能使用。需要自行源码编译,或使用使用musl编译版本。
 
-## 常规编译
+### 常规编译
 ```bash
 # 克隆源码
 git clone https://github.com/mindoc-org/mindoc.git
@@ -68,9 +74,9 @@ MinDoc 如果使用MySQL储存数据，则编码必须是`utf8mb4_general_ci`。
 
 **默认程序会自动初始化一个超级管理员用户：admin 密码：123456 。请登录后重新设置密码。**
 
-## Linux系统中不依赖gLibC的编译方式
+### Linux系统中不依赖gLibC的编译方式
 
-### 安装 musl-gcc
+#### 安装 musl-gcc
 ```bash
 wget -c http://www.musl-libc.org/releases/musl-1.2.2.tar.gz
 tar -xvf musl-1.2.2.tar.gz
@@ -79,7 +85,7 @@ cd musl-1.2.2
 make
 sudo make install
 ```
-### 使用 musl-gcc 编译 mindoc
+#### 使用 musl-gcc 编译 mindoc
 ```bash
 go mod tidy -v
 export GOARCH=amd64
@@ -113,7 +119,7 @@ mail_expired=30
 ```
 
 
-# 使用Docker部署
+### 使用Docker部署
 如果是Docker用户，可参考项目内置的Dockerfile文件自行编译镜像(编译命令见Dockerfile文件底部注释，仅供参考)。
 
 在启动镜像时需要提供如下的常用环境变量(全部支持的环境变量请参考: [`conf/app.conf.example`](https://github.com/mindoc-org/mindoc/blob/master/conf/app.conf.example))：
@@ -181,46 +187,10 @@ docker run -p 8181:8181 --name mindoc -e DB_ADAPTER=mysql -e MYSQL_PORT_3306_TCP
         > 
         > 更多 docker-compose 的使用相关的内容 请查看官网文档或百度
    
-# 项目截图
-
-**创建项目**
-
-![创建项目](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501204438.png)
-
-**项目列表**
-
-![项目列表](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501203542.png)
-
-**项目概述**
-
-![项目概述](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501203619.png)
-
-**项目成员**
-
-![项目成员](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501203637.png)
-
-**项目设置**
-
-![项目设置](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501203656.png)
-
-**基于Editor.md开发的Markdown编辑器**
-
-![基于Editor.md开发的Markdown编辑器](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501203854.png)
-
-**基于wangEditor开发的富文本编辑器**
-
-![基于wangEditor开发的富文本编辑器](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501204651.png)
-
-**项目预览**
-
-![项目预览](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501204609.png)
-
-**超级管理员后台**
-
-![超级管理员后台](https://raw.githubusercontent.com/lifei6671/mindoc/master/uploads/20170501204710.png)
 
 
-# 使用的技术(TODO: 最新技术栈整理中，使用的第三方库升级中)
+
+### 使用的技术(TODO: 最新技术栈整理中，使用的第三方库升级中)
 
 - [Beego](https://github.com/beego/beego) ~~1.10.0~~
 - MySQL 5.6
@@ -244,7 +214,7 @@ docker run -p 8181:8181 --name mindoc -e DB_ADAPTER=mysql -e MYSQL_PORT_3306_TCP
 - [Vue.js](https://github.com/vuejs/vue) 框架
 
 
-# 主要功能
+### 主要功能
 
 - 项目管理，可以对项目进行编辑更改，成员添加等。
 - 文档管理，添加和删除文档等。
@@ -254,13 +224,9 @@ docker run -p 8181:8181 --name mindoc -e DB_ADAPTER=mysql -e MYSQL_PORT_3306_TCP
 - 项目加密，可以设置项目公开状态，私有项目需要通过Token访问。
 - 站点配置，可开启匿名访问、验证码等。
 
-# 参与开发
 
-我们欢迎您在 MinDoc 项目的 GitHub 上报告 issue 或者 pull request。
 
-如果您还不熟悉GitHub的Fork and Pull开发模式，您可以阅读GitHub的文档（https://help.github.com/articles/using-pull-requests） 获得更多的信息。
-
-# 关于作者[lifei6671](https://github.com/lifei6671)
+### 关于作者[lifei6671](https://github.com/lifei6671)
 
 一个不纯粹的PHPer，一个不自由的 gopher 。
 

@@ -20677,6 +20677,7 @@ var MdEditor = /** @class */ (function (_super) {
     MdEditor.prototype.setMarkdown = function (markdown, cursorToEnd) {
         if (cursorToEnd === void 0) { cursorToEnd = true; }
         var lineTexts = markdown.split(reLineEnding);
+        //debugger
         var _a = this.view.state, tr = _a.tr, doc = _a.doc, schema = _a.schema;
         var nodes = lineTexts.map(function (lineText) {
             return createParagraph(schema, createNodesWithWidget(lineText, schema));
@@ -29582,6 +29583,7 @@ var Renderer = /** @class */ (function () {
             var converted = isCustomBlock(node) || isCustomInline(node)
                 ? convertor(node, context, this_1.convertors)
                 : convertor(node, context);
+           
             if (converted) {
                 var htmlNodes = Array.isArray(converted) ? converted : [converted];
                 htmlNodes.forEach(function (htmlNode, index) {
@@ -29589,8 +29591,10 @@ var Renderer = /** @class */ (function () {
                         if (!htmlNode.attributes) {
                             htmlNode.attributes = {};
                         }
+                        htmlNode.attributes['id']="mknid_"+String(node.id)
                         htmlNode.attributes['data-nodeid'] = String(node.id);
                     }
+                    //debugger
                     _this.renderHTMLNode(htmlNode);
                 });
                 if (skipped) {

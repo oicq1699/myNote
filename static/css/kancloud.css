@@ -996,6 +996,29 @@ table>tbody>tr:hover{
     margin: 0 0 10px 10px;
 }
 
+.markdown-toc-li-1 {
+    padding-left: 10px;
+}
+.markdown-toc-li-2 {
+    padding-left: 20px;
+}
+
+.markdown-toc-li-3 {
+    padding-left: 30px;
+}
+
+.markdown-toc-li-4 {
+    padding-left: 40px;
+}
+
+.markdown-toc-li-5 {
+    padding-left: 50px;
+}
+
+.markdown-toc-li-6 {
+    padding-left: 60px;
+}
+
 .http-method .default{
     width: 70px;
     display: inline-block;
