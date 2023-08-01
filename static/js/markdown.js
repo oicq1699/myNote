@@ -61,6 +61,62 @@ $(function () {
     const { Editor } = toastui;
     const { codeSyntaxHighlight } = Editor.plugin;
 
+    /**
+     * 上传文件部分代码单独抽离出来
+     * @param {} blob 
+     * @param {*} callback 
+     * @returns 
+     */
+    function uploadImageHandler(blob, callback) {
+ 
+        debugger
+        var form = new FormData();
+        var fileName = String((new Date()).valueOf());
+        switch (blob.type) {
+            case "image/png" :
+                fileName += ".png";
+                break;
+            case "image/jpg" :
+                fileName += ".jpg";
+                break;
+            case "image/jpeg" :
+                fileName += ".jpeg";
+                break;
+            case "image/gif" :
+                fileName += ".gif";
+                break;
+            default :
+                layer.msg(locales[lang].unsupportType);
+                return;
+        }
+
+        form.append('editormd-image-file', blob, fileName);
+
+        $.ajax({
+            url: window.imageUploadURL,
+            type: "POST",
+            dataType: "json",
+            data: form,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                //layerIndex = $callback('before');
+            },
+            error: function () {
+                //layer.close(layerIndex);
+              //  $callback('error');
+               // layer.msg(locales[lang].uploadFailed);
+            },
+            success: function (data) {
+                debugger
+                return callback(data.url,data.alt);
+
+            }
+        });
+
+    }
+
+
 
     window.editor=new toastui.Editor({
         el: document.querySelector('#docEditor'),
@@ -74,6 +130,9 @@ $(function () {
             change:function(){
                 resetEditorChanged(true);
             }
+        },
+        hooks: {
+            addImageBlobHook:uploadImageHandler
         },
         plugins: [codeSyntaxHighlight]
 

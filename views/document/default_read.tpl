@@ -187,17 +187,7 @@
                        
                     </div>
                     <div  id="page-content2-right-tab" class="markdown-toc editormd-markdown-toc"  style="height: 600px; position: fixed; width: 15%;right: 0; top: 18%; overflow: auto;">
-                    <ul class="markdown-toc-list">
-                        <li class="directory-item">
-                            <a class="directory-item-link directory-item-link-1" href="#as964j" level="1">【MyNote】git使用入门笔记(初始化，抓取提交，分支标签，签入签出，配置代理服务器http_proxy,查看配置)</a>
-                        </li>
-                        <li class="directory-item">
-                        <a class="directory-item-link directory-item-link-2" href="#4q592k" level="2">初始化</a>
-                        </li>
-                        <li class="directory-item"><a class="directory-item-link directory-item-link-3" href="#eh6t9s" level="3">配置用户名和邮箱信息（可选，需要提交才要配置）</a></li>
-                        <li class="directory-item"><a class="directory-item-link directory-item-link-3" href="#ar8mxe" level="3">配置保存用户名和密码</a></li>
-                    </ul>
-                    </div>
+                     </div>
 
                     {{if .Model.IsDisplayComment}}
                     <div id="articleComment" class="m-comment{{if .IS_DOCUMENT_INDEX}} not-show-comment{{end}}">
@@ -389,9 +379,9 @@ $(function () {
         ,
         plugins: [[codeSyntaxHighlight, { highlighter: Prism }]]
       });
-
+    if (!window.IS_DOCUMENT_INDEX){
       loadDocument(window.location.href, '{{.DocumentId}}','{{.Version}}');
-
+    }
  
 
 
