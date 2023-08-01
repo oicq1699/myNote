@@ -2,7 +2,11 @@
 MyNote fork 于 MinDoc，MinDoc 是一款针对IT团队开发的简单好用的文档管理系统。
 
 分叉的原因是每个人的口味并不相同，这个笔记主要是自己用的，所以基于MinDoc，做些改造，更合自己的口味，让自己用的更舒服一点。
-帮助使用手册完全可以参考MinDoc，
+
+
+我个人不太喜欢nodejs和npm生态，特别是在一些小项目上，我觉得他们会把简单事情复杂化（想像一下你只是想做个简单的编辑页面，一不小心就会像钓带鱼一样钓上成百上千个js，更不用说一堆Deprecated 和版本不兼容的报错....）。所以这个小项目的前端，我只使用直接能引用的js,css,尽量不用带min的，这样有啥问题就直接改。
+
+帮助使用手册完全可以参考MinDoc。
 
 >如果下文所列的一些调整项，对你而言并不需要，建议你还是使用原版MinDoc.原版的维护更有保障
 ## MinDoc适合我的地方
@@ -15,7 +19,31 @@ MyNote fork 于 MinDoc，MinDoc 是一款针对IT团队开发的简单好用的�
 ## 后期开发计划
 - toc栏双向交互
 - 标题栏下方显示文章所在目录
+- 左侧加一个打开文件历史记录
+- 图片粘贴toastui-editor-viewer 是直接转成base64内嵌，这个有优点也有缺点，优点是不用单独找文件夹放图片了，缺点是文章上base64占的量太大了，会有断裂感
 
+
+## 使用到的技术
+- [Mindoc](https://github.com/mindoc-org/mindoc) 本项目的主框架，感谢作者 lifei6671 创造了MinDoc，并持续维护了很久。感谢社区(github组织mindoc-org)继续维护
+  - Beego 1.10.0
+  - MySQL 5.6
+  - editor.md Markdown 编辑器
+  - Bootstrap 3.2
+  - jQuery 库
+  - WebUploader 文件上传框架
+  - NProgress 库
+  - jsTree 树状结构库
+  - Font Awesome 字体库
+  - Cropper 图片剪裁库
+  - layer 弹出层框架
+  - highlight.js 代码高亮库
+  - to-markdownTurndown HTML转Markdown库
+  - quill 富文本编辑器
+  - wangEditor 富文本编辑器
+  - wangEditor v4.7 富文本编辑器教程
+  - Vue.js 框架
+- [markdown-toc](https://github.com/wzd521314/markdown-toc) 生成toc边栏使用了部分代码
+- [TOAST UI Editor](https://github.com/nhn/tui.editor) markdown编辑及浏览主要使得了该编辑器
 
 ---
 >下面是mindoc的介绍，摘之其官网,向原作者致敬，终于让我找到了一个合适的文档管理软件
