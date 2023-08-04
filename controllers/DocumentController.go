@@ -246,6 +246,11 @@ func (c *DocumentController) Edit() {
 		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.project_id_error"))
 	}
 
+	nodeId := c.Ctx.Input.Param(":id")
+	if !(nodeId == "") {
+		c.Data["NodeId"] = nodeId
+	}
+
 	bookResult := models.NewBookResult()
 
 	var err error

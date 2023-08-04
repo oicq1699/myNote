@@ -108,7 +108,7 @@ func GetDefaultCover() string {
 
 // 获取允许的商城文件的类型.
 func GetUploadFileExt() []string {
-	ext := web.AppConfig.DefaultString("upload_file_ext", "png|jpg|jpeg|gif|txt|doc|docx|pdf")
+	ext := web.AppConfig.DefaultString("upload_file_ext", "png|jpg|jpeg|gif|txt|doc|docx|pdf|zip")
 
 	temp := strings.Split(ext, "|")
 

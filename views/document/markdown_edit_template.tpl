@@ -9,6 +9,7 @@
     <script type="text/javascript">
         window.IS_ENABLE_IFRAME = '{{conf "enable_iframe" }}' === 'true';
         window.BASE_URL = '{{urlfor "HomeController.Index" }}';
+
     </script>
     <script type="text/javascript">
         window.treeCatalog = null;
@@ -31,6 +32,11 @@
         window.highlightStyle = "{{.HighlightStyle}}";
         window.template = { "getUrl":"{{urlfor "TemplateController.Get"}}", "listUrl" : "{{urlfor "TemplateController.List"}}", "deleteUrl" : "{{urlfor "TemplateController.Delete"}}", "saveUrl" :"{{urlfor "TemplateController.Add"}}"}
         window.lang = {{i18n $.Lang "common.js_lang"}};
+
+        {{if .NodeId }}
+        window.sessionStorage.setItem("MinDoc::LastLoadDocument:" + window.book.identify, NodeId);
+        {{end}}
+
     </script>
     <!-- Bootstrap -->
     <link href="{{cdncss "/static/bootstrap/css/bootstrap.min.css"}}" rel="stylesheet">

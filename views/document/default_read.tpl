@@ -73,7 +73,8 @@
                 {{if gt .Member.MemberId 0}}
                 {{if eq .Model.RoleId 0 1 2}}
                 <div class="dropdown pull-left" style="margin-right: 10px;">
-                    <a href="{{urlfor "DocumentController.Edit" ":key" .Model.Identify ":id" ""}}" class="btn btn-danger"><i class="fa fa-edit" aria-hidden="true"></i> {{i18n .Lang "blog.edit"}}</a>
+                    <a href="{{urlfor "DocumentController.Edit" ":key" .Model.Identify ":id" ""}}"  class="btn btn-danger"><i class="fa fa-edit" aria-hidden="true"></i> {{i18n .Lang "blog.edit"}}</a>
+                    <a href="#" onclick="editInNewTab()" class="btn btn-danger"><i class="fa fa-edit" aria-hidden="true"></i> {{i18n .Lang "blog.edit_in_new_tab"}}</a>
                     {{if eq .Model.RoleId 0 1}}
                     <a href="{{urlfor "BookController.Users" ":key" .Model.Identify}}" class="btn btn-success"><i class="fa fa-user" aria-hidden="true"></i> {{i18n .Lang "blog.member"}}</a>
                     <a href="{{urlfor "BookController.Setting" ":key" .Model.Identify}}" class="btn btn-primary"><i class="fa fa-gear" aria-hidden="true"></i> {{i18n .Lang "common.setting"}}</a>
@@ -314,6 +315,16 @@
 <script src="{{cdnjs "/static/toastui-editor/toastui-editor-plugin-code-syntax-highlight-all.min.js"  }}" type="text/javascript"></script>
 
 <script type="text/javascript">
+
+function editInNewTab() {
+    url="{{urlfor "DocumentController.Edit" ":key" .Model.Identify ":id" ""}}"
+    selectedNodeId=window.sessionStorage.getItem("MinDoc::LastLoadDocument:" + window.book.identify);
+    if(selectedNodeId){
+        url=url+selectedNodeId
+    }
+    window.open(url, '_blank');
+}
+
 $(function () {
     $("#searchList").on("click","a",function () {
         var id = $(this).attr("data-id");
