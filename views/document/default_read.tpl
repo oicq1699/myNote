@@ -115,6 +115,7 @@
                 <div class="tab-navg">
                     <span data-mode="view" class="navg-item active"><i class="fa fa-align-justify"></i><b class="text">{{i18n .Lang "doc.contents"}}</b></span>
                     <span data-mode="search" class="navg-item"><i class="fa fa-search"></i><b class="text">{{i18n .Lang "doc.search"}}</b></span>
+                    <span data-mode="history" class="navg-item"><i class="fa fa-align-justify"></i><b class="text">{{i18n .Lang "doc.history"}}</b></span>
                     <span id="handlerMenuShow" style="float: right;display: inline-block;padding: 5px;cursor: pointer;">
                         <i class="fa fa-angle-left" style="font-size: 20px;padding-right: 5px;"></i>
                         <span class="pull-right" style="padding-top: 4px;">{{i18n .Lang "doc.expand"}}</span>
@@ -155,6 +156,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-item manual-history">
+                        <div class="catalog-list read-book-preview" id="sidebar">
+                        {{.Result}}
+                        </div>
+
+                    </div>
+
+
                 </div>
             </div>
             <div class="m-copyright">

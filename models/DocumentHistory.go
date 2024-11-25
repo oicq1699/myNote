@@ -16,7 +16,6 @@ type DocumentHistory struct {
 	DocumentName string    `orm:"column(document_name);size(500);description(关联文档id)" json:"doc_name"`
 	ParentId     int       `orm:"column(parent_id);type(int);index;default(0);description(父级文档id)" json:"parent_id"`
 	Markdown     string    `orm:"column(markdown);type(text);null;description(文档内容)" json:"markdown"`
-	Content      string    `orm:"column(content);type(text);null;description(文档内容)" json:"content"`
 	MemberId     int       `orm:"column(member_id);type(int);description(作者id)" json:"member_id"`
 	ModifyTime   time.Time `orm:"column(modify_time);type(datetime);auto_now;description(修改时间)" json:"modify_time"`
 	ModifyAt     int       `orm:"column(modify_at);type(int);description(修改人id)" json:"-"`
@@ -59,7 +58,7 @@ func (m *DocumentHistory) Find(id int) (*DocumentHistory, error) {
 	return m, err
 }
 
-//清空指定文档的历史.
+// 清空指定文档的历史.
 func (m *DocumentHistory) Clear(docId int) error {
 	o := orm.NewOrm()
 
@@ -68,7 +67,7 @@ func (m *DocumentHistory) Clear(docId int) error {
 	return err
 }
 
-//删除历史.
+// 删除历史.
 func (m *DocumentHistory) Delete(historyId, docId int) error {
 	o := orm.NewOrm()
 
@@ -77,7 +76,7 @@ func (m *DocumentHistory) Delete(historyId, docId int) error {
 	return err
 }
 
-//恢复指定历史的文档.
+// 恢复指定历史的文档.
 func (m *DocumentHistory) Restore(historyId, docId, uid int) error {
 	o := orm.NewOrm()
 
@@ -93,7 +92,6 @@ func (m *DocumentHistory) Restore(historyId, docId, uid int) error {
 	}
 	history := NewDocumentHistory()
 	history.DocumentId = docId
-	history.Content = doc.Content
 	history.Markdown = doc.Markdown
 	history.DocumentName = doc.DocumentName
 	history.ModifyAt = uid
@@ -107,9 +105,9 @@ func (m *DocumentHistory) Restore(historyId, docId, uid int) error {
 	history.InsertOrUpdate()
 
 	doc.DocumentName = m.DocumentName
-	doc.Content = m.Content
+
 	doc.Markdown = m.Markdown
-	doc.Release = m.Content
+
 	doc.Version = time.Now().Unix()
 	doc.IsOpen = m.IsOpen
 
@@ -152,7 +150,7 @@ func (m *DocumentHistory) InsertOrUpdate() (history *DocumentHistory, err error)
 	return
 }
 
-//分页查询指定文档的历史.
+// 分页查询指定文档的历史.
 func (m *DocumentHistory) FindToPager(docId, pageIndex, pageSize int) (docs []*DocumentHistorySimpleResult, totalCount int, err error) {
 
 	o := orm.NewOrm()

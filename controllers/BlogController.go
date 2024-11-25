@@ -344,11 +344,9 @@ func (c *BlogController) ManageEdit() {
 			}
 
 			doc.Markdown = blogContent
-			doc.Release = blogHtml
-			doc.Content = blogHtml
 			doc.ModifyTime = time.Now()
 			doc.ModifyAt = c.Member.MemberId
-			if err := doc.InsertOrUpdate("markdown", "release", "content", "modify_time", "modify_at"); err != nil {
+			if err := doc.InsertOrUpdate("markdown", "modify_time", "modify_at"); err != nil {
 				logs.Error("保存关联文档时出错 ->", err)
 				c.JsonResult(6004, i18n.Tr(c.Lang, "message.failed"))
 			}

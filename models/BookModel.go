@@ -882,7 +882,7 @@ func (book *Book) ImportBook(zipPath string, lang string) error {
 				//	return strings.Replace(s,"```","``` ",-1)
 				//})
 
-				doc.Content = string(blackfriday.Run([]byte(doc.Markdown)))
+				doc.Markdown = string(blackfriday.Run([]byte(doc.Markdown)))
 
 				doc.Version = time.Now().Unix()
 
@@ -925,7 +925,7 @@ func (book *Book) ImportBook(zipPath string, lang string) error {
 					doc.ParentId = parentId
 					isInsert = true
 				}
-				if err := doc.InsertOrUpdate("document_name", "markdown", "content"); err != nil {
+				if err := doc.InsertOrUpdate("document_name", "markdown"); err != nil {
 					logs.Error(doc.DocumentId, err)
 				}
 				if isInsert {
@@ -1020,7 +1020,7 @@ func (book *Book) ImportWordBook(docxPath string, lang string) (err error) {
 	// fmt.Println(doc.Markdown)
 	// fmt.Println("==================")
 
-	doc.Content = string(blackfriday.Run([]byte(doc.Markdown)))
+	doc.Markdown = string(blackfriday.Run([]byte(doc.Markdown)))
 
 	// fmt.Println("===doc.Content===")
 	// fmt.Println(doc.Content)
@@ -1038,7 +1038,7 @@ func (book *Book) ImportWordBook(docxPath string, lang string) (err error) {
 
 	doc.DocumentName = strings.TrimSpace(docName)
 
-	if err := doc.InsertOrUpdate("document_name", "book_id", "markdown", "content"); err != nil {
+	if err := doc.InsertOrUpdate("document_name", "book_id", "markdown"); err != nil {
 		logs.Error(doc.DocumentId, err)
 	}
 	if err != nil {

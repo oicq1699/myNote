@@ -15,7 +15,7 @@ import (
 	"github.com/mindoc-org/mindoc/utils"
 )
 
-//博文表
+// 博文表
 type Blog struct {
 	BlogId int `orm:"pk;auto;unique;column(blog_id)" json:"blog_id"`
 	//文章标题
@@ -89,7 +89,7 @@ func NewBlog() *Blog {
 	}
 }
 
-//根据文章ID查询文章
+// 根据文章ID查询文章
 func (b *Blog) Find(blogId int) (*Blog, error) {
 	o := orm.NewOrm()
 
@@ -102,7 +102,7 @@ func (b *Blog) Find(blogId int) (*Blog, error) {
 	return b.Link()
 }
 
-//从缓存中读取文章
+// 从缓存中读取文章
 func (b *Blog) FindFromCache(blogId int) (blog *Blog, err error) {
 	key := fmt.Sprintf("blog-id-%d", blogId)
 	var temp Blog
@@ -126,7 +126,7 @@ func (b *Blog) FindFromCache(blogId int) (blog *Blog, err error) {
 	return
 }
 
-//查找指定用户的指定文章
+// 查找指定用户的指定文章
 func (b *Blog) FindByIdAndMemberId(blogId, memberId int) (*Blog, error) {
 	o := orm.NewOrm()
 
@@ -139,7 +139,7 @@ func (b *Blog) FindByIdAndMemberId(blogId, memberId int) (*Blog, error) {
 	return b.Link()
 }
 
-//根据文章标识查询文章
+// 根据文章标识查询文章
 func (b *Blog) FindByIdentify(identify string) (*Blog, error) {
 	o := orm.NewOrm()
 
@@ -151,17 +151,17 @@ func (b *Blog) FindByIdentify(identify string) (*Blog, error) {
 	return b, nil
 }
 
-//获取指定文章的链接内容
+// 获取指定文章的链接内容
 func (b *Blog) Link() (*Blog, error) {
 	o := orm.NewOrm()
 	//如果是链接文章，则需要从链接的项目中查找文章内容
 	if b.BlogType == 1 && b.DocumentId > 0 {
 		doc := NewDocument()
-		if err := o.QueryTable(doc.TableNameWithPrefix()).Filter("document_id", b.DocumentId).One(doc, "release", "markdown", "identify", "book_id"); err != nil {
+		if err := o.QueryTable(doc.TableNameWithPrefix()).Filter("document_id", b.DocumentId).One(doc, "markdown", "identify", "book_id"); err != nil {
 			logs.Error("查询文章链接对象时出错 -> ", err)
 		} else {
 			b.DocumentIdentify = doc.Identify
-			b.BlogRelease = doc.Release
+			b.BlogRelease = doc.Markdown
 
 			//目前仅支持markdown文档进行链接
 			b.BlogContent = doc.Markdown
@@ -211,14 +211,14 @@ func (b *Blog) Link() (*Blog, error) {
 	return b, nil
 }
 
-//判断指定的文章标识是否存在
+// 判断指定的文章标识是否存在
 func (b *Blog) IsExist(identify string) bool {
 	o := orm.NewOrm()
 
 	return o.QueryTable(b.TableNameWithPrefix()).Filter("blog_identify", identify).Exist()
 }
 
-//保存文章
+// 保存文章
 func (b *Blog) Save(cols ...string) error {
 	o := orm.NewOrm()
 
@@ -250,7 +250,7 @@ func (b *Blog) Save(cols ...string) error {
 	return err
 }
 
-//过滤文章的危险标签，处理文章外链以及图片.
+// 过滤文章的危险标签，处理文章外链以及图片.
 func (b *Blog) Processor() *Blog {
 
 	b.BlogRelease = utils.SafetyProcessor(b.BlogRelease)
@@ -285,7 +285,7 @@ func (b *Blog) Processor() *Blog {
 	return b
 }
 
-//分页查询文章列表
+// 分页查询文章列表
 func (b *Blog) FindToPager(pageIndex, pageSize int, memberId int, status string) (blogList []*Blog, totalCount int, err error) {
 
 	o := orm.NewOrm()
@@ -326,7 +326,7 @@ func (b *Blog) FindToPager(pageIndex, pageSize int, memberId int, status string)
 	return
 }
 
-//删除文章
+// 删除文章
 func (b *Blog) Delete(blogId int) error {
 	o := orm.NewOrm()
 
@@ -337,7 +337,7 @@ func (b *Blog) Delete(blogId int) error {
 	return err
 }
 
-//查询下一篇文章
+// 查询下一篇文章
 func (b *Blog) QueryNext(blogId int) (*Blog, error) {
 	o := orm.NewOrm()
 	blog := NewBlog()
@@ -355,7 +355,7 @@ func (b *Blog) QueryNext(blogId int) (*Blog, error) {
 	return blog, err
 }
 
-//查询下一篇文章
+// 查询下一篇文章
 func (b *Blog) QueryPrevious(blogId int) (*Blog, error) {
 	o := orm.NewOrm()
 	blog := NewBlog()
@@ -373,7 +373,7 @@ func (b *Blog) QueryPrevious(blogId int) (*Blog, error) {
 	return blog, err
 }
 
-//关联文章附件
+// 关联文章附件
 func (b *Blog) LinkAttach() (err error) {
 
 	o := orm.NewOrm()

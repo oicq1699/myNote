@@ -42,6 +42,7 @@ func (c *ManagerController) Index() {
 
 	c.Data["Model"] = models.NewDashboard().Query()
 	c.Data["Action"] = "index"
+	
 }
 
 // 用户列表.

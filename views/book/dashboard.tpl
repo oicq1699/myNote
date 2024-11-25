@@ -51,9 +51,7 @@
                         {{end}}
                         <a href="{{urlfor "DocumentController.Index" ":key" .Model.Identify}}" class="btn btn-default btn-sm pull-right" style="margin-right: 5px;" target="_blank"><i class="fa fa-eye"></i> {{i18n $.Lang "blog.read"}}</a>
 
-                        {{if eq .Model.RoleId 0 1 2}}
-                        <button class="btn btn-default btn-sm pull-right" style="margin-right: 5px;" id="btnRelease"><i class="fa fa-upload" aria-hidden="true"></i> {{i18n $.Lang "blog.publish"}}</button>
-                        {{end}}
+                       
                     </div>
                 </div>
                 <div class="box-body">
@@ -106,25 +104,6 @@
 <script src="{{cdnjs "/static/bootstrap/js/bootstrap.min.js"}}"></script>
 <script src="{{cdnjs "/static/layer/layer.js"}}"></script>
 <script src="{{cdnjs "/static/js/main.js"}}" type="text/javascript"></script>
-<script type="text/javascript">
-    $(function () {
-        $("#btnRelease").on("click",function () {
-            $.ajax({
-                url : "{{urlfor "BookController.Release" ":key" .Model.Identify}}",
-                data :{"identify" : "{{.Model.Identify}}" },
-                type : "post",
-                dataType : "json",
-                success : function (res) {
-                    if(res.errcode === 0){
-                        layer.msg("{{i18n $.Lang "message.publish_to_queue"}}");
-                    }else{
-                        layer.msg(res.message);
-                    }
-                }
-            });
-        });
 
-    });
-</script>
 </body>
 </html>

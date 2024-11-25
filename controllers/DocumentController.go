@@ -65,9 +65,9 @@ func (c *DocumentController) Index() {
 		if err == nil {
 			selected = doc.DocumentId
 			c.Data["Title"] = doc.DocumentName
-			c.Data["Content"] = template.HTML(doc.Release)
+			c.Data["Content"] = ""
 
-			c.Data["Description"] = utils.AutoSummary(doc.Release, 120)
+			c.Data["Description"] = ""
 
 			if bookResult.IsDisplayComment {
 				// 获取评论、分页
@@ -96,6 +96,31 @@ func (c *DocumentController) Index() {
 	c.Data["Result"] = template.HTML(tree)
 
 }
+
+// func (c *DocumentController) GetDocumentTree() {
+
+// 	c.Prepare()
+
+// 	identify := c.Ctx.Input.Param(":key")
+// 	token := c.GetString("token")
+
+// 	if identify == "" {
+// 		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.item_not_exist"))
+// 	}
+
+// 	// 如果没有开启匿名访问则跳转到登录
+// 	if !c.EnableAnonymous && !c.isUserLoggedIn() {
+// 		promptUserToLogIn(c)
+// 		return
+// 	}
+
+// 	bookResult := c.isReadable(identify, token)
+// 	tree, err := models.NewDocument().FindDocumentTree(bookResult.BookId)
+// 	if err != nil {
+// 		c.JsonResult(-1,"不存在")
+// 	}
+
+// }
 
 // CheckPassword : Handles password verification for private documents,
 // and front-end requests are made through Ajax.
@@ -200,7 +225,7 @@ func (c *DocumentController) Read() {
 		data.DocId = doc.DocumentId
 		data.DocIdentify = doc.Identify
 		data.DocTitle = doc.DocumentName
-		data.Body = doc.Release
+		data.Body = ""
 		data.Title = doc.DocumentName + " - Powered by MinDoc"
 		data.Version = doc.Version
 		data.ViewCount = doc.ViewCount
@@ -227,12 +252,12 @@ func (c *DocumentController) Read() {
 		c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.build_doc_tree_error"))
 	}
 
-	c.Data["Description"] = utils.AutoSummary(doc.Release, 120)
+	c.Data["Description"] = utils.AutoSummary(doc.Markdown, 120)
 
 	c.Data["Model"] = bookResult
 	c.Data["Result"] = template.HTML(tree)
 	c.Data["Title"] = doc.DocumentName
-	c.Data["Content"] = template.HTML(doc.Release)
+	c.Data["Content"] = template.HTML(doc.Markdown)
 	c.Data["ViewCount"] = doc.ViewCount
 	c.Data["Markdown"] = "`\n" + doc.Markdown + "\n`"
 }
@@ -776,7 +801,6 @@ func (c *DocumentController) Content() {
 
 	if c.Ctx.Input.IsPost() {
 		markdown := strings.TrimSpace(c.GetString("markdown", ""))
-		content := c.GetString("html")
 		version, _ := c.GetInt64("version", 0)
 		isCover := c.GetString("cover")
 
@@ -797,7 +821,7 @@ func (c *DocumentController) Content() {
 
 		history := models.NewDocumentHistory()
 		history.DocumentId = docId
-		history.Content = doc.Content
+
 		history.Markdown = doc.Markdown
 		history.DocumentName = doc.DocumentName
 		history.ModifyAt = c.Member.MemberId
@@ -807,14 +831,10 @@ func (c *DocumentController) Content() {
 		history.Action = "modify"
 		history.ActionName = i18n.Tr(c.Lang, "doc.modify_doc")
 
-		if markdown == "" && content != "" {
-			doc.Markdown = content
-		} else {
-			doc.Markdown = markdown
-		}
+		doc.Markdown = markdown
 
 		doc.Version = time.Now().Unix()
-		doc.Content = content
+
 		doc.ModifyAt = c.Member.MemberId
 
 		if err := doc.InsertOrUpdate(); err != nil {
@@ -1278,7 +1298,7 @@ func (c *DocumentController) Compare() {
 	identify := c.Ctx.Input.Param(":key")
 
 	bookId := 0
-	editor := "markdown"
+	//editor := "markdown"
 
 	// 如果是超级管理员则忽略权限判断
 	if c.Member.IsAdministrator() {
@@ -1291,7 +1311,7 @@ func (c *DocumentController) Compare() {
 
 		bookId = book.BookId
 		c.Data["Model"] = book
-		editor = book.Editor
+		//editor = book.Editor
 	} else {
 		bookResult, err := models.NewBookResult().FindByIdentify(identify, c.Member.MemberId)
 		if err != nil || bookResult.RoleId == conf.BookObserver {
@@ -1302,7 +1322,7 @@ func (c *DocumentController) Compare() {
 
 		bookId = bookResult.BookId
 		c.Data["Model"] = bookResult
-		editor = bookResult.Editor
+		//editor = bookResult.Editor
 	}
 
 	if historyId <= 0 {
@@ -1324,13 +1344,9 @@ func (c *DocumentController) Compare() {
 	c.Data["HistoryId"] = historyId
 	c.Data["DocumentId"] = doc.DocumentId
 
-	if editor == "markdown" {
-		c.Data["HistoryContent"] = history.Markdown
-		c.Data["Content"] = doc.Markdown
-	} else {
-		c.Data["HistoryContent"] = template.HTML(history.Content)
-		c.Data["Content"] = template.HTML(doc.Content)
-	}
+	c.Data["HistoryContent"] = history.Markdown
+	c.Data["Content"] = doc.Markdown
+
 }
 
 // 判断用户是否可以阅读文档

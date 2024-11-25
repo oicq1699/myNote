@@ -24,7 +24,6 @@
         window.selectNode = null;
         window.deleteURL = "{{urlfor "DocumentController.Delete" ":key" .Model.Identify}}";
         window.editURL = "{{urlfor "DocumentController.Content" ":key" .Model.Identify ":id" ""}}";
-        window.releaseURL = "{{urlfor "BookController.Release" ":key" .Model.Identify}}";
         window.sortURL = "{{urlfor "BookController.SaveSort" ":key" .Model.Identify}}";
         window.baiduMapKey = "{{.BaiDuMapKey}}";
         window.historyURL = "{{urlfor "DocumentController.History"}}";

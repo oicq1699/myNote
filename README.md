@@ -1,4 +1,5 @@
 # MyNote 简介
+默认用户名/密码:admin/123456
 MyNote fork 于 MinDoc，MinDoc 是一款针对IT团队开发的简单好用的文档管理系统。
 
 分叉的原因是每个人的口味并不相同，这个笔记主要是自己用的，所以基于MinDoc，做些改造，更合自己的口味，让自己用的更舒服一点。
@@ -67,6 +68,11 @@ MinDoc 的前身是 [SmartWiki](https://github.com/lifei6671/SmartWiki) 文档�
 
 ---
 
+|aa|bb|cc|dd|
+|---|--|--|--|
+|a|b|c|d|
+|a|b|c|d|
+
 ### 安装与使用
 
 **如果你的服务器上没有安装golang程序请手动设置一个环境变量如下：键名为 ZONEINFO，值为MinDoc跟目录下的/lib/time/zoneinfo.zip 。**
@@ -95,6 +101,8 @@ bee run
 ```
 
 MinDoc 如果使用MySQL储存数据，则编码必须是`utf8mb4_general_ci`。请在安装前，把数据库配置填充到项目目录下的 `conf/app.conf` 中。
+
+
 
 如果使用 `SQLite` 数据库，则直接在配置文件中配置数据库路径即可.
 

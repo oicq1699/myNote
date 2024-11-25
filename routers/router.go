@@ -264,5 +264,6 @@ func init() {
 
 	web.Router("/items", &controllers.ItemsetsController{}, "get:Index")
 	web.Router("/items/:key", &controllers.ItemsetsController{}, "get:List")
+	// web.Router("/test", &controllers.TestController{}, "*:Index")
 
 }
