@@ -90,8 +90,8 @@ body{
 }
 .manual-editor-container{
     position: absolute;
-    left: 280px;
-    top: 40px;
+    left: 0px;
+    top: 80px;
     right: 0;
     bottom: 0;
     overflow: hidden;
@@ -154,6 +154,8 @@ body{
 .editormd-group .disabled i:hover{
     background: #ffffff !important;
 }
+
+
 .editormd-group a.disabled{
     border-color: #c9c9c9;
     opacity: .6;
@@ -363,6 +365,17 @@ body{
     color: #8e8d8d
 }
 
+.toastui-editor-toolbar-item-wrapper .change {
+    color: #ffffff;
+    background-color: #44B036 !important;
+    border: 1px #44B036 solid !important;
+}
+.toastui-editor-toolbar-item-wrapper .change:hover{
+    background-color: #58CB48 !important;
+}
+.toastui-editor-toolbar-item-wrapper .change .disabled:hover{
+    background: #ffffff !important;
+}
 
 
 

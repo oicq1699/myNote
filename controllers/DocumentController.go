@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"image/png"
@@ -18,7 +17,6 @@ import (
 
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
 	"github.com/beego/i18n"
 	"github.com/boombuler/barcode"
 	"github.com/boombuler/barcode/qr"
@@ -271,73 +269,78 @@ func (c *DocumentController) Edit() {
 		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.project_id_error"))
 	}
 
-	nodeId := c.Ctx.Input.Param(":id")
-	if !(nodeId == "") {
-		c.Data["NodeId"] = nodeId
+	id := c.GetString(":id")
+
+	if id == "" {
+		c.ShowErrorPage(404, i18n.Tr(c.Lang, "message.doc_id_empty"))
 	}
 
-	bookResult := models.NewBookResult()
+	c.Data["Identify"] = identify
+	c.Data["Id"] = id
 
-	var err error
-	// 如果是管理者，则不判断权限
-	if c.Member.IsAdministrator() {
-		book, err := models.NewBook().FindByFieldFirst("identify", identify)
-		if err != nil {
-			c.JsonResult(6002, i18n.Tr(c.Lang, "message.item_not_exist_or_no_permit"))
-		}
+	// var err error
 
-		bookResult = models.NewBookResult().ToBookResult(*book)
-	} else {
-		bookResult, err = models.NewBookResult().FindByIdentify(identify, c.Member.MemberId)
+	// bookResult := models.NewBookResult()
 
-		if err != nil {
-			if err == orm.ErrNoRows || err == models.ErrPermissionDenied {
-				c.ShowErrorPage(403, i18n.Tr(c.Lang, "message.item_not_exist_or_no_permit"))
-			} else {
-				logs.Error("查询项目时出错 -> ", err)
-				c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.system_error"))
-			}
-			return
-		}
-		if bookResult.RoleId == conf.BookObserver {
-			c.JsonResult(6002, i18n.Tr(c.Lang, "message.item_not_exist_or_no_permit"))
-		}
-	}
+	// // 如果是管理者，则不判断权限
+	// if c.Member.IsAdministrator() {
+	// 	book, err := models.NewBook().FindByFieldFirst("identify", identify)
+	// 	if err != nil {
+	// 		c.JsonResult(6002, i18n.Tr(c.Lang, "message.item_not_exist_or_no_permit"))
+	// 	}
 
-	// 根据不同编辑器类型加载编辑器
-	if bookResult.Editor == "markdown" {
-		c.TplName = "document/markdown_edit_template.tpl"
-	} else if bookResult.Editor == "html" {
-		c.TplName = "document/html_edit_template.tpl"
-	} else if bookResult.Editor == "new_html" {
-		c.TplName = "document/new_html_edit_template.tpl"
-	} else {
-		c.TplName = "document/" + bookResult.Editor + "_edit_template.tpl"
-	}
+	// 	bookResult = models.NewBookResult().ToBookResult(*book)
+	// } else {
+	// 	bookResult, err = models.NewBookResult().FindByIdentify(identify, c.Member.MemberId)
 
-	c.Data["Model"] = bookResult
+	// 	if err != nil {
+	// 		if err == orm.ErrNoRows || err == models.ErrPermissionDenied {
+	// 			c.ShowErrorPage(403, i18n.Tr(c.Lang, "message.item_not_exist_or_no_permit"))
+	// 		} else {
+	// 			logs.Error("查询项目时出错 -> ", err)
+	// 			c.ShowErrorPage(500, i18n.Tr(c.Lang, "message.system_error"))
+	// 		}
+	// 		return
+	// 	}
+	// 	if bookResult.RoleId == conf.BookObserver {
+	// 		c.JsonResult(6002, i18n.Tr(c.Lang, "message.item_not_exist_or_no_permit"))
+	// 	}
+	// }
 
-	r, _ := json.Marshal(bookResult)
+	// // 根据不同编辑器类型加载编辑器
+	// if bookResult.Editor == "markdown" {
+	c.TplName = "document/markdown_edit_template.html.tpl"
+	// } else if bookResult.Editor == "html" {
+	// 	c.TplName = "document/html_edit_template.tpl"
+	// } else if bookResult.Editor == "new_html" {
+	// 	c.TplName = "document/new_html_edit_template.tpl"
+	// } else {
+	// 	c.TplName = "document/" + bookResult.Editor + "_edit_template.tpl"
+	// }
 
-	c.Data["ModelResult"] = template.JS(string(r))
+	// c.Data["Model"] = bookResult
 
-	c.Data["Result"] = template.JS("[]")
+	// r, _ := json.Marshal(bookResult)
 
-	trees, err := models.NewDocument().FindDocumentTree(bookResult.BookId)
+	// c.Data["ModelResult"] = template.JS(string(r))
 
-	if err != nil {
-		logs.Error("FindDocumentTree => ", err)
-	} else {
-		if len(trees) > 0 {
-			if jtree, err := json.Marshal(trees); err == nil {
-				c.Data["Result"] = template.JS(string(jtree))
-			}
-		} else {
-			c.Data["Result"] = template.JS("[]")
-		}
-	}
+	// c.Data["Result"] = template.JS("[]")
 
-	c.Data["BaiDuMapKey"] = web.AppConfig.DefaultString("baidumapkey", "")
+	// trees, err := models.NewDocument().FindDocumentTree(bookResult.BookId)
+
+	// if err != nil {
+	// 	logs.Error("FindDocumentTree => ", err)
+	// } else {
+	// 	if len(trees) > 0 {
+	// 		if jtree, err := json.Marshal(trees); err == nil {
+	// 			c.Data["Result"] = template.JS(string(jtree))
+	// 		}
+	// 	} else {
+	// 		c.Data["Result"] = template.JS("[]")
+	// 	}
+	// }
+
+	// c.Data["BaiDuMapKey"] = web.AppConfig.DefaultString("baidumapkey", "")
 
 	if conf.GetUploadFileSize() > 0 {
 		c.Data["UploadFileSize"] = conf.GetUploadFileSize()
@@ -760,7 +763,7 @@ func (c *DocumentController) Delete() {
 }
 
 // 获取文档内容
-func (c *DocumentController) Content() {
+func (c *DocumentController) Save() {
 	c.Prepare()
 
 	identify := c.Ctx.Input.Param(":key")

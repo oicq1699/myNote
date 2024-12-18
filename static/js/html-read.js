@@ -455,7 +455,7 @@ $(function () {
 
     initHighlighting();
     window.jsTree = $("#sidebar").jstree({
-        'plugins' : ["wholerow", "types"],
+        'plugins' : ["wholerow", "types", 'contextmenu'],
         "types": {
             "default" : {
                 "icon" : false  // 删除默认图标
@@ -465,6 +465,50 @@ $(function () {
             'check_callback' : true,
             "multiple" : false,
             'animation' : 0
+        },
+        "contextmenu": {
+            show_at_node: false,
+            select_node: false,
+            "items": {
+                "添加文档": {
+                    "separator_before": false,
+                    "separator_after": true,
+                    "_disabled": false,
+                    "label": "添加文档",
+                    "icon": "fa fa-plus",
+                    "action": function (data) {
+
+                        var inst = $.jstree.reference(data.reference),
+                            node = inst.get_node(data.reference);
+
+                        openCreateCatalogDialog(node);
+                    }
+                },
+                "编辑": {
+                    "separator_before": false,
+                    "separator_after": true,
+                    "_disabled": false,
+                    "label": "编辑",
+                    "icon": "fa fa-edit",
+                    "action": function (data) {
+                        var inst = $.jstree.reference(data.reference);
+                        var node = inst.get_node(data.reference);
+                        editInNewTab(node.id);
+                    }
+                },
+                "删除": {
+                    "separator_before": false,
+                    "separator_after": true,
+                    "_disabled": false,
+                    "label": "删除",
+                    "icon": "fa fa-trash-o",
+                    "action": function (data) {
+                        var inst = $.jstree.reference(data.reference);
+                        var node = inst.get_node(data.reference);
+                        openDeleteDocumentDialog(node);
+                    }
+                }
+            }
         }
     }).on('select_node.jstree', function (node, selected) {
         //如果是空目录则直接出发展开下一级功能

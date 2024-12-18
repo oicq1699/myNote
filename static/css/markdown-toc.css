@@ -1,0 +1,70 @@
+
+ /* 基本样式 */
+.markdown-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.directory-item {
+    margin: 0px 0;
+}
+
+.directory-item-link {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s ease;
+/*    border-radius: 4px;*/
+    border-left: 2px solid #e8e8e8;
+}
+
+
+
+
+/* 不同级别的目录缩进 */
+.directory-item-link-2 {
+    padding-left: 10px; /* 二级目录缩进 */
+    font-size: 14px;
+}
+
+.directory-item-link-3 {
+    padding-left: 20px; /* 三级目录缩进 */
+    font-size: 13px;
+}
+
+.directory-item-link-4 {
+    padding-left: 45px; /* 4级目录缩进 */
+    font-size: 12px;
+}
+
+.directory-item-link-5 {
+    padding-left: 60px; /* 5级目录缩进 */
+    font-size: 12px;
+}
+
+.directory-item-link-6 {
+    padding-left: 75px; /* 6级目录缩进 */
+    font-size: 12px;
+}
+
+
+.directory-item-link-7 {
+    padding-left: 90px; /* 7级目录缩进 */
+    font-size: 12px;
+}
+
+
+
+/* 鼠标悬停时背景改变 */
+.directory-item-link:hover {
+    background-color: #f0f0f0;
+}
+
+/* 点击后背景保持改变 */
+.directory-item-link.currentToc {
+    background-color: #d1e7dd;
+    font-weight: bold;
+    border-left: 2px solid #25b864 !important;
+}

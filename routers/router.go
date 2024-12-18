@@ -235,7 +235,7 @@ func init() {
 	web.Router("/api/upload", &controllers.DocumentController{}, "post:Upload")
 	web.Router("/api/:key/create", &controllers.DocumentController{}, "post:Create")
 	web.Router("/api/:key/delete", &controllers.DocumentController{}, "post:Delete")
-	web.Router("/api/:key/content/?:id", &controllers.DocumentController{}, "*:Content")
+	web.Router("/api/:key/save/?:id", &controllers.DocumentController{}, "*:Save")
 	web.Router("/api/:key/compare/:id", &controllers.DocumentController{}, "*:Compare")
 	web.Router("/api/search/user/:key", &controllers.SearchController{}, "*:User")
 

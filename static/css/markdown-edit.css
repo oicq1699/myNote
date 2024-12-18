@@ -1,0 +1,38 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}        
+        
+.text{
+    font-size: 12px;
+    color: #999999;
+    font-weight: 200;
+}
+
+/* 自定义样式 */
+.fixed-height {
+    height: 60px;
+    
+}
+
+.flex-grow {
+    flex-grow: 1;
+
+    overflow-y: auto; /* 如果内容超出，显示滚动条 */
+}
+
+.toastui-editor-toolbar-item-wrapper .change {
+    color: #ffffff;
+    background-color: #44B036 !important;
+    border: 1px #44B036 solid !important;
+}
+.toastui-editor-toolbar-item-wrapper .change:hover{
+    background-color: #58CB48 !important;
+}
+.toastui-editor-toolbar-item-wrapper .change .disabled:hover{
+    background: #ffffff !important;
+}
+
+ 
+
+

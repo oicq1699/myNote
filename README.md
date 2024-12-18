@@ -9,7 +9,32 @@ MyNote fork 于 MinDoc，MinDoc 是一款针对IT团队开发的简单好用的�
 
 帮助使用手册完全可以参考MinDoc。
 
+## 常规编译
+```bash
+# 克隆源码
+git clone https://github.com/mindoc-org/mindoc.git
+# go包安装
+go mod tidy -v
+# 编译(sqlite需要CGO支持)
+go build -ldflags "-w" -o mindoc main.go
+# 数据库初始化(此步骤执行之前，需配置`conf/app.conf`)
+./mindoc install
+# 执行
+./mindoc
+# 开发阶段运行
+bee run
+
+# 调试
+main.go
+```
+
+
 >如果下文所列的一些调整项，对你而言并不需要，建议你还是使用原版MinDoc.原版的维护更有保障
+
+
+
+
+
 ## MinDoc适合我的地方
 - 网页应用，不需要专门的app，因为是基于服务端的，所以也不存在同步的问题，而我在手机端，基本上不会做编辑，最多就是浏览一下
 - markdown 格式，非专有格式保证数据可移植性
@@ -22,6 +47,8 @@ MyNote fork 于 MinDoc，MinDoc 是一款针对IT团队开发的简单好用的�
 - 标题栏下方显示文章所在目录
 - 左侧加一个打开文件历史记录
 - 图片粘贴toastui-editor-viewer 是直接转成base64内嵌，这个有优点也有缺点，优点是不用单独找文件夹放图片了，缺点是文章上base64占的量太大了，会有断裂感
+
+
 
 
 ## 使用到的技术
